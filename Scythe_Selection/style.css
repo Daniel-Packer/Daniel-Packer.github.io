@@ -1,0 +1,64 @@
+button {
+    background-color: rgb(150, 155, 158); /* Scythe Gray */
+    border: none;
+    color: rgb(251, 251, 251);
+    padding: 10px 14px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    transition-duration: 0.3s;
+    margin: 10px;
+}
+
+p, .normal {
+    text-decoration: none;
+    font:normal 18px 'fjallaone', Arial, sans-serif;
+    font-weight: bold;   
+    color: rgb(44,22,5);
+}
+
+button:hover {
+    background-color: rgb(87, 92, 85); /* Green */
+    color: rgb(251, 251, 251);
+}
+
+input {
+    border: 2px solid rgb(211, 179, 141);
+    border-radius: 2px;
+    padding: 7px;
+    margin: 2px;
+    color: rgb(44,22,5);
+    font:normal 15px/20px 'fjallaone', Arial, sans-serif;
+}
+
+body {
+    background-color: #e7e5da;
+}
+
+.header {
+    text-align: center;
+    font: 25px/40px Verdana, sans-serif;
+    color: #979893;
+    font-weight: lighter;
+    transform: scale(1, 1.5);
+}
+
+.column-left {
+    width: 450px;
+    float: left;
+}
+
+.column-center {
+    width: 450px;
+    float: left;
+}
+
+.column-right {
+    width: 350px;
+    float: left;
+}
+
+.player-names {
+    columns: 150px 2;
+}
