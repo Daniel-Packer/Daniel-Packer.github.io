@@ -1,0 +1,172 @@
+<html>
+<title>hi</title>    
+
+<body>
+    <button onclick="test()"> Test </button>
+    <button onclick="update()">Update Map</button>
+    <button onclick="updateAndPrint()"> Update and Print</button>
+    <button onclick="startStop()"> Start/Stop</button>
+    <p id="populationCounter">This is some text</p>
+    <p id= "demo"> Test Outputs</p>
+    <input type="text" id="delay"><button onclick="changeDelay()">Submit Delay</button>
+    <canvas class="display">
+        
+    </canvas>
+    
+    <script>
+        const display = document.querySelector('.display');
+        const dWidth = display.width = window.innerWidth - 20;
+        const dHeight = display.height = window.innerHeight - 20;
+        const dCtx = display.getContext("2d");
+        var x = 0;
+        var runUpdate = false;
+        var map = [];
+        var density = 0.5;
+        var mapSize = 20;
+        var delay = 1000;
+        var colorVal = 0;
+        var isDrawing = false;
+        for (i = 0; i < mapSize; i++) {
+            var line = [];
+            for (j = 0; j < mapSize; j++) {
+                if (Math.random() > density) {
+                    line.push(1);
+                } else {
+                    line.push(0);
+                }
+            }
+            map.push(line);
+        }
+        display.addEventListener('mousedown', (ev) => {
+            var rect = display.getBoundingClientRect();
+            xClick = Math.floor((ev.clientX - rect.left)/10);
+            yClick = Math.floor((ev.clientY - rect.top)/10);
+            colorVal = (map[yClick][xClick] + 1) % 2;
+            map[yClick][xClick] = colorVal;
+            isDrawing = true;
+            generateMap(map);
+        });
+        
+        display.addEventListener('mouseup', (ev) => {
+            isDrawing = false;
+        });
+        
+        display.addEventListener('mousemove', (ev) => {
+            if (isDrawing) {
+            var rect = display.getBoundingClientRect();
+                xClick = Math.floor((ev.clientX - rect.left)/10);
+                yClick = Math.floor((ev.clientY - rect.top)/10);
+                map[yClick][xClick] = colorVal;
+                generateMap(map);
+            }
+        })
+        
+        function flipBit(x,y) {
+            // Only use this for flipping individual bits at a time, since it refreshes the map each time it is called.
+            if(!runUpdate) {
+                map[y][x] = ((map[y][x] + 1) % 2);
+                generateMap(map);
+            }
+        }
+        function startStop() {
+            runUpdate = !runUpdate;
+            timeUpdate();
+        }
+        async function timeUpdate() {
+            while (runUpdate) {
+                update();
+                generateMap(map);
+                await new Promise(r => setTimeout(r, delay));
+            }
+        }
+        function changeDelay() {
+            delay = document.getElementById("delay").value;
+        }
+        function test(thing) {
+            document.getElementById("demo").innerHTML = thing.toString();
+        }
+        function update() {
+            map = updateMap(map);
+        }     
+        function updateAndPrint() {
+            update();
+            generateMap(map);
+        }
+        function generateMap(m) {
+            var output = "";
+            var count = 0;
+            for (y = 0; y < mapSize; y++) {
+                for (x = 0; x < mapSize; x++) {
+                    output = output.concat(m[y][x]);
+                    output = output.concat(" ");
+                    if (m[y][x] == 1) {
+                        dCtx.fillStyle = 'rgb(0,0,0)';
+                        count++;
+                    } else {
+                        dCtx.fillStyle = 'rgb(255,255,255)';
+                    }
+                    
+                    dCtx.fillRect(x * 10, y * 10, 10, 10);
+                }
+                output = output.concat("<br />");
+            }
+            document.getElementById("populationCounter").innerHTML = count;
+            return output;
+        }
+        function countNeighbors(m, x, y) {
+            // I don't know if there is a way to do this super efficiently, but I think it's good just to check cases....
+            var count = 0;
+            var xmod = m[0].length;
+            var ymod = m.length;
+//            left column
+            count += m[(y-1 + ymod) % ymod][(x-1 + xmod) % xmod] + m[y % ymod][(x-1 + xmod) % xmod] + m[(y + 1) % ymod][(x - 1 + xmod) % xmod];
+//             above, below
+            count += m[(y+1) % ymod][x % xmod] + m[(y-1 + ymod) % ymod][x % xmod];
+//            right column
+            count += m[(y-1 + ymod) % ymod][(x+1) % xmod] + m[y % ymod][(x+1) % xmod] + m[(y + 1) % ymod][(x + 1) % xmod];
+            return count;
+        }
+        function countNeighborsKlein(m , x ,y) {
+            // This should count the number of neighbors for the Klein bottle topology....
+            // The twist is top to bottom (on the y-coordinate)
+            var count = 0;
+            var xmod = m[0].length;
+            var ymod = m.length;
+            if (y == 0) { // This is a twist at the bottom, which is actually the top in the display
+                count += m[(y - 1 + ymod) % ymod][(1-x + 2*xmod)% xmod] + m[(y - 1 + ymod) % ymod][(2*xmod - x)% xmod] + m[(y - 1 + ymod) % ymod][(2*xmod - x - 1)% xmod];
+                count += m[y][(x -1 + xmod) % xmod] + m[y][(x + 1 + xmod) % xmod];
+                count += m[(y+1 + ymod) % ymod][(x - 1 + xmod) % xmod] + m[(y+1 + ymod) % ymod][(x + xmod) % xmod] + m[(y+1 + ymod) % ymod][(x + 1 + xmod) % xmod];
+            }else if (y==ymod-1) { // This is a twist at the top, which is actually the bottom of the display
+                count += m[(y + 1 + ymod) % ymod][(1-x + 2*xmod)% xmod] + m[(y + 1 + ymod) % ymod][(2*xmod - x)% xmod] + m[(y + 1 + ymod) % ymod][(2*xmod - x - 1)% xmod];
+                count += m[y][(x -1 + xmod) % xmod] + m[y][(x + 1 + xmod) % xmod];
+                count += m[(y - 1 + ymod) % ymod][(x - 1 + xmod) % xmod] + m[(y - 1 + ymod) % ymod][(x + xmod) % xmod] + m[(y - 1 + ymod) % ymod][(x + 1 + xmod) % xmod];
+            }else { // If we are in the middle, we don't need to worry about the topology, and can count it normally, so:
+                count = countNeighbors(m , x ,y);
+            }
+            return count;
+        }
+        function updateMap(m) {
+            var newMap = JSON.parse(JSON.stringify(m));
+            // just for testing purposes:
+            // var iteratedHere = "";
+            for (y = 0; y < m.length; y++) {
+                for (x = 0; x < m[y].length; x++) {
+                    var n = countNeighborsKlein(m, x, y);
+                    if (n < 2 || n > 3) {
+                        newMap[y][x] = 0;
+                    } else if (n == 3) {
+                        newMap[y][x] = 1;
+                    }
+                    // iteratedHere = iteratedHere.concat(y.toString()).concat(x.toString()).concat(", ");
+                }
+            }
+            return newMap;
+        }
+    </script>
+    
+    
+</body>
+
+
+
+</html> 

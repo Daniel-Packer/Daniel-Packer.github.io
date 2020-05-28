@@ -1,0 +1,12 @@
+.toolbar {
+    text-align: center;
+    font: 15px/40px Verdana, sans-serif;
+    color: black;
+    font-weight: lighter;
+}
+
+.header {
+    text-align: center;
+    font: 25px/40px Verdana, sans-serif;
+    font-weight: lighter;
+}

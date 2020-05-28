@@ -182,7 +182,7 @@ function resolveBidding(method) {
     }
 
     for (i = 0; i < playerList.length; i++) {
-        bidResultString = bidResultString.concat('Player ', playerList[i], ' receives ', newFactions[best_performer[1][i]], ' for ', playerBids[i][best_performer[1][i]].toString(), ' coins <br>');
+        bidResultString = bidResultString.concat(playerList[i], ' receives ', newFactions[best_performer[1][i]], ' for ', playerBids[i][best_performer[1][i]].toString(), ' coins <br>');
     }
     document.getElementById('bidReturns').innerHTML = bidResultString;
     return best_performer;
