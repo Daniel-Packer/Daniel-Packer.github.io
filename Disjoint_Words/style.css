@@ -1,0 +1,25 @@
+.one_box {
+    width : 20;
+    height : 20;
+    text-align: center;
+    
+}
+.xword {
+    display: inline-block;
+}
+.content_wrapper {
+    text-align: center;
+}
+.header {
+    text-align: center;
+    font: 25px/40px Verdana, sans-serif;
+    color: #979893;
+    font-weight: lighter;
+/*    transform: scale(1, 1.5);*/
+}
+.toolbar {
+    text-align: center;
+    font: 15px/25px Verdana, sans-serif;
+    color: #979893;
+    font-weight: lighter;
+}
