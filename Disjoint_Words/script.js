@@ -1,4 +1,4 @@
-//Updated: 10-07-2020, 13:25
+//Updated: 10-07-2020, 13:30
 
 var n = 14; // We use this and count from zero, so the value here, is one less than the dimension.
 var orientation = true; // true means horizontal, false means vertical
@@ -218,31 +218,31 @@ function one_box_focus (e) {
     // The following is a first attempt at using the data_muse api. It doesn't work. I'm going to have to learn how to use js apis
 
     
-    if (word != old_word) {
-        for (var box of one_boxes) {
-            box.placeholder = "";
-        }
-        var request = new XMLHttpRequest();
-        request.open('GET', "http://api.datamuse.com/words?sp=".concat(word));
-        suggested_word = "";
-        suggested_word = request.onload = function() {
-            var data = JSON.parse(this.response);
-            suggested_word = data[0].word;
-            console.log("suggested word stored as: ".concat(suggested_word));
-            return suggested_word;
-        }
 
-        request.send();
+    for (var box of one_boxes) {
+        box.placeholder = "";
     }
-    var k = 0;
-    for (var box of word_boxes) {
-        box.placeholder = suggested_word.substr(k, 1).toUpperCase();
-        k += 1;
-        console.log("box: ");
-        console.log(box);
-        console.log("box placeholder: ");
-        console.log(box.placeholder);
+    var request = new XMLHttpRequest();
+    request.open('GET', "http://api.datamuse.com/words?sp=".concat(word));
+    suggested_word = "";
+    request.onload = function() {
+        var data = JSON.parse(this.response);
+        suggested_word = data[0].word;
+        console.log("suggested word stored as: ".concat(suggested_word));
+        var k = 0;
+        for (var box of word_boxes) {
+            box.placeholder = suggested_word.substr(k, 1).toUpperCase();
+            k += 1;
+            console.log("box: ");
+            console.log(box);
+            console.log("box placeholder: ");
+            console.log(box.placeholder);
+        }
+        return suggested_word;
     }
+
+    request.send();
+    
     console.log(suggested_word);
     
     old_word = word;
