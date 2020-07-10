@@ -1,4 +1,4 @@
-//Updated: 10-07-2020, 13:30
+//Updated: 10-07-2020, 13:37
 
 var n = 14; // We use this and count from zero, so the value here, is one less than the dimension.
 var orientation = true; // true means horizontal, false means vertical
@@ -75,7 +75,9 @@ function one_box_keydown(e){
         if (!(orientation)) {
             down_move();
         }
-        
+    }
+    else if (e.which == 13) { //Detects if Enter was pressed:
+         get_suggestion();
     }
     getSquare(coord_pos).focus();
     reshade();
@@ -154,6 +156,14 @@ function one_box_focus (e) {
     const x = parseInt(this.id.split(" ")[1]);
     coord_pos = [x,y];
     
+
+}
+
+
+// Helper Functions
+// The function to call the DataMuse API to get a suggestion for the selected row/column:
+
+function get_suggestion() {
     var hit_wall = false;
     var check_pos = coord_pos;
     // Go backwards to the beginning of the word:
@@ -246,11 +256,9 @@ function one_box_focus (e) {
     console.log(suggested_word);
     
     old_word = word;
-    
 }
 
 
-// Helper Functions
 // Movement in the four cardinal directions, skipping over the appropriate squares:
 function left_move() {
     if (coord_pos[0] > 0) {
