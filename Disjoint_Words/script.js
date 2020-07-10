@@ -209,7 +209,7 @@ function one_box_focus (e) {
     // The following is a first attempt at using the data_muse api. It doesn't work. I'm going to have to learn how to use js apis
     if (word != old_word) {
         var request = new XMLHttpRequest();
-        request.open('GET', "api.datamuse.com/words?sp=t??k");
+        request.open('GET', "https://api.datamuse.com/words?sp=t??k");
         var suggested_word = "";
         request.onload = function() {
             var data = JSON.parse(this.response);
