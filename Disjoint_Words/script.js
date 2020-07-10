@@ -213,7 +213,8 @@ function one_box_focus (e) {
         var suggested_word = "";
         request.onload = function() {
             var data = JSON.parse(this.response);
-            suggested_word = "data loaded";
+            suggested_word = data;
+            console.log("data loaded");
         }
 
         request.send();
