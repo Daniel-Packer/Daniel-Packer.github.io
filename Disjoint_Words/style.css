@@ -23,3 +23,13 @@
     color: #979893;
     font-weight: lighter;
 }
+input {
+    border: none;
+    color: transparent;
+    text-shadow: 0 0 0 gray;
+    text-align: center;
+
+    &:focus {
+        outline: none;
+    }
+}
