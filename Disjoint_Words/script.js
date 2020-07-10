@@ -1,4 +1,4 @@
-//Updated: 10-07-2020, 13:23
+//Updated: 10-07-2020, 13:25
 
 var n = 14; // We use this and count from zero, so the value here, is one less than the dimension.
 var orientation = true; // true means horizontal, false means vertical
@@ -225,8 +225,11 @@ function one_box_focus (e) {
         var request = new XMLHttpRequest();
         request.open('GET', "http://api.datamuse.com/words?sp=".concat(word));
         suggested_word = "";
-        request.onload = function() {
-            get_suggested_word();
+        suggested_word = request.onload = function() {
+            var data = JSON.parse(this.response);
+            suggested_word = data[0].word;
+            console.log("suggested word stored as: ".concat(suggested_word));
+            return suggested_word;
         }
 
         request.send();
@@ -248,14 +251,6 @@ function one_box_focus (e) {
 
 
 // Helper Functions
-
-function get_suggested_word() {
-    var data = JSON.parse(this.response);
-    suggested_word = data[0].word;
-    console.log("suggested word stored as: ".concat(suggested_word));
-    return suggested_word;
-}
-
 // Movement in the four cardinal directions, skipping over the appropriate squares:
 function left_move() {
     if (coord_pos[0] > 0) {
