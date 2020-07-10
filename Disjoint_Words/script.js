@@ -1,4 +1,4 @@
-//Updated: 10-07-2020, 14:19
+//Updated: 10-07-2020, 14:23
 
 var n = 14; // We use this and count from zero, so the value here, is one less than the dimension.
 var orientation = true; // true means horizontal, false means vertical
