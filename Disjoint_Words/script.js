@@ -206,22 +206,21 @@ function one_box_focus (e) {
             word = word.concat(box.value);
         }
     }
-    
     // The following is a first attempt at using the data_muse api. It doesn't work. I'm going to have to learn how to use js apis
-//    console.log(word_boxes);
-//    console.log(word);
-//    var request = new XMLHttpRequest();
-//
-//    request.open('GET', "https://api.datamuse.com/words?sp=t??k");
-//    var suggested_word = "";
-//    request.onload = function() {
-//        var data = JSON.parse(this.response);
-//        suggested_word = data;
-//    }
-//
-//    request.send();
-//
-//    console.log(suggested_word);
+    if (word != old_word) {
+        var request = new XMLHttpRequest();
+        request.open('GET', "api.datamuse.com/words?sp=t??k");
+        var suggested_word = "";
+        request.onload = function() {
+            var data = JSON.parse(this.response);
+            suggested_word = data;
+        }
+
+        request.send();
+
+        console.log(suggested_word);
+    }
+    var old_word = word;
 }
 
 
