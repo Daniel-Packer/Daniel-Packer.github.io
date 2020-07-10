@@ -1,10 +1,11 @@
-//Updated: 10-07-2020, 13:12
+//Updated: 10-07-2020, 13:17
 
 var n = 14; // We use this and count from zero, so the value here, is one less than the dimension.
 var orientation = true; // true means horizontal, false means vertical
 var xword_string = "";
 var recent_move = 1;
 var old_word= " ";
+ var suggested_word;
 var coord_pos = [0,0];
 for (var i = 0; i <= n; i += 1) {
     for (var j = 0; j <= n; j += 1){
@@ -215,7 +216,7 @@ function one_box_focus (e) {
         }
     }
     // The following is a first attempt at using the data_muse api. It doesn't work. I'm going to have to learn how to use js apis
-    var suggested_word;
+
     
     if (word != old_word) {
         for (var box of one_boxes) {
@@ -228,18 +229,19 @@ function one_box_focus (e) {
             var data = JSON.parse(this.response);
             suggested_word = data[0].word;
             console.log("suggested word stored as: ".concat(suggested_word));
-            var k = 0;
-            for (var box of word_boxes) {
-                box.placeholder = suggested_word.substr(k, 1).toUpperCase();
-                k += 1;
-                console.log("box: ");
-                console.log(box);
-                console.log("box placeholder: ");
-                console.log(box.placeholder);
-            }
+            
         }
 
         request.send();
+    }
+    var k = 0;
+    for (var box of word_boxes) {
+        box.placeholder = suggested_word.substr(k, 1).toUpperCase();
+        k += 1;
+        console.log("box: ");
+        console.log(box);
+        console.log("box placeholder: ");
+        console.log(box.placeholder);
     }
     console.log(suggested_word);
     
