@@ -216,6 +216,15 @@ function one_box_focus (e) {
             var data = JSON.parse(this.response);
             suggested_word = data[0].word;
             console.log("suggested word stored as: ".concat(suggested_word));
+            var k = 0;
+            for (var box of word_boxes) {
+                box.placeholder = suggested_word.substr(k, k + 1);
+                k += 1;
+                console.log("box: ");
+                console.log(box);
+                console.log("box placeholder: ");
+                console.log(box.placeholder);
+            }
         }
 
         request.send();
@@ -223,15 +232,7 @@ function one_box_focus (e) {
     console.log(suggested_word);
     
     var old_word = word;
-    var k = 0;
-    for (var box of word_boxes) {
-        box.placeholder = suggested_word.substr(k, k + 1);
-        k += 1;
-        console.log("box: ");
-        console.log(box);
-        console.log("box placeholder: ");
-        console.log(box.placeholder);
-    }
+    
 }
 
 
