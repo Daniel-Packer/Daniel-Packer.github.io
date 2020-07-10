@@ -1,3 +1,5 @@
+//Updated: 10-07-2020, 13:12
+
 var n = 14; // We use this and count from zero, so the value here, is one less than the dimension.
 var orientation = true; // true means horizontal, false means vertical
 var xword_string = "";
