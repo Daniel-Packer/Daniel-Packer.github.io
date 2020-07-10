@@ -33,3 +33,14 @@ input {
         outline: none;
     }
 }
+
+.instructions {
+    text-align: center;
+    font: 10px/15px Verdana, sans-serif;
+    color: #616161;
+    font-weight: lighter;
+/*    transform: scale(1, 1.5);*/
+}
+.instructions-wrapper {
+    text-align: center;
+}

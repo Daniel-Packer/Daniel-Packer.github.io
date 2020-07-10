@@ -1,4 +1,4 @@
-//Updated: 10-07-2020, 14:23
+//Updated: 10-07-2020, 15:05
 
 var n = 14; // We use this and count from zero, so the value here, is one less than the dimension.
 var orientation = true; // true means horizontal, false means vertical
@@ -25,6 +25,7 @@ for (const one_box of one_boxes) {
 }
 
 function one_box_keydown(e){
+    this.placeholder = "";
     if (e.key.length == 1) { // Detects if the key pressed is a letter key
         this.value = '';
     }else if((e.which >= 37) && (e.which <= 40)){ // Detects if the key pressed is an arrow key
