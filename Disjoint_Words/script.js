@@ -213,21 +213,21 @@ function one_box_focus (e) {
         var suggested_word = "";
         request.onload = function() {
             var data = JSON.parse(this.response);
-            console.log("data loaded");
             suggested_word = data[0].word;
-            console.log("the data word: ".concat(data[0].word));
             console.log("suggested word stored as: ".concat(suggested_word));
         }
 
         request.send();
-
-        console.log(suggested_word);
     }
     var old_word = word;
     var k = 0;
     for (var box of word_boxes) {
         box.placeholder = suggested_word.substr(k, k + 1);
         k += 1;
+        console.log("box: ");
+        console.log(box);
+        console.log("box placeholder: ");
+        console.log(box.placeholder);
     }
 }
 
