@@ -208,7 +208,11 @@ function one_box_focus (e) {
     }
     // The following is a first attempt at using the data_muse api. It doesn't work. I'm going to have to learn how to use js apis
     var suggested_word;
+    
     if (word != old_word) {
+        for (var box of one_boxes) {
+            box.placeholder = "";
+        }
         var request = new XMLHttpRequest();
         request.open('GET', "http://api.datamuse.com/words?sp=".concat(word));
         suggested_word = "";
@@ -218,7 +222,7 @@ function one_box_focus (e) {
             console.log("suggested word stored as: ".concat(suggested_word));
             var k = 0;
             for (var box of word_boxes) {
-                box.placeholder = suggested_word.substr(k, k + 1);
+                box.placeholder = suggested_word.substr(k, 1).toUpperCase();
                 k += 1;
                 console.log("box: ");
                 console.log(box);
