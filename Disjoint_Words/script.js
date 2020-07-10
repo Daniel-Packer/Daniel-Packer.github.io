@@ -220,6 +220,8 @@ function one_box_focus (e) {
 
         request.send();
     }
+    console.log(suggested_word);
+    
     var old_word = word;
     var k = 0;
     for (var box of word_boxes) {
