@@ -2,6 +2,7 @@ var n = 14; // We use this and count from zero, so the value here, is one less t
 var orientation = true; // true means horizontal, false means vertical
 var xword_string = "";
 var recent_move = 1;
+var old_word= " ";
 var coord_pos = [0,0];
 for (var i = 0; i <= n; i += 1) {
     for (var j = 0; j <= n; j += 1){
@@ -145,6 +146,11 @@ function one_box_focus (e) {
     // Suggest words here:
     
     // First, we find the focused area:
+       // Need to reset the position we are located at:
+    const y = parseInt(this.id.split(" ")[0]);
+    const x = parseInt(this.id.split(" ")[1]);
+    coord_pos = [x,y];
+    
     var hit_wall = false;
     var check_pos = coord_pos;
     // Go backwards to the beginning of the word:
@@ -235,7 +241,7 @@ function one_box_focus (e) {
     }
     console.log(suggested_word);
     
-    var old_word = word;
+    old_word = word;
     
 }
 
