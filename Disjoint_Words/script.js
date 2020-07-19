@@ -5,7 +5,7 @@ var orientation = true; // true means horizontal, false means vertical
 var xword_string = "";
 var recent_move = 1;
 var old_word= " ";
- var suggested_word;
+var suggested_word;
 var coord_pos = [0,0];
 for (var i = 0; i <= n; i += 1) {
     for (var j = 0; j <= n; j += 1){
@@ -15,13 +15,38 @@ for (var i = 0; i <= n; i += 1) {
 }
 document.getElementById("x-word").innerHTML = xword_string;
 
+var old_entries = [];
+try {
+    old_entries = JSON.parse(localStorage.getItem("entries"));
+}
+catch {
+    old_entries = [];
+    for (var i = 0; i < (n + 1)*(n+1) ; i++) {
+        old_entries.push("");
+    }
+}
+if (old_entries == null) {
+    old_entries = [];
+    for (var i = 0; i < (n + 1)*(n+1) ; i++) {
+        old_entries.push("");
+    }
+}
 var one_boxes = document.getElementsByClassName("one_box");
-for (const one_box of one_boxes) {
+for (var one_box of one_boxes) {
     one_box.addEventListener("keydown", one_box_keydown);
     one_box.addEventListener("input", one_box_input);
     one_box.addEventListener("mousedown", one_box_click);
     one_box.addEventListener("focus", one_box_focus);
     one_box.style.border = "1px solid black";
+    if (old_entries[0] == "b") {
+        one_box.style.backgroundColor = "black";
+        one_box.readOnly = true;
+        old_entries.shift();
+    }
+    else {
+        one_box.value = old_entries.shift();
+    }
+
 }
 
 function one_box_keydown(e){
@@ -95,6 +120,8 @@ function one_box_input(e){
     }
     getSquare(coord_pos).focus();
     reshade();
+    
+    
 }
 
 function one_box_click(e) {
@@ -259,6 +286,24 @@ function get_suggestion() {
     old_word = word;
 }
 
+function save_data() {
+    var one_boxes = document.getElementsByClassName("one_box");
+    var all_data = [];
+    for (var box of one_boxes){
+        if (box.style.backgroundColor != "black") {
+            if (box.value == "" || box.value == " ") {
+                all_data.push(" ");
+            }
+            else {
+                all_data.push(box.value);
+            }
+        }
+        else {
+            all_data.push("b");
+        }
+    }
+    localStorage.setItem("entries", JSON.stringify(all_data));
+}
 
 // Movement in the four cardinal directions, skipping over the appropriate squares:
 function left_move() {
