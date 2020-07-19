@@ -31,8 +31,8 @@ if (old_entries == null) {
         old_entries.push("");
     }
 }
-var one_boxes = document.getElementsByClassName("one_box");
-for (var one_box of one_boxes) {
+var all_boxes = document.getElementsByClassName("one_box");
+for (var one_box of all_boxes) {
     one_box.addEventListener("keydown", one_box_keydown);
     one_box.addEventListener("input", one_box_input);
     one_box.addEventListener("mousedown", one_box_click);
@@ -130,30 +130,27 @@ function one_box_click(e) {
         recent_move = 0;
     }
     if (this == document.activeElement) {
-        coord_pos[0] = n - coord_pos[0];
-        coord_pos[1] = n - coord_pos[1];
+        var sym_pos = [n - coord_pos[0], n - coord_pos[1]];
         if (this.readOnly) {
             this.readOnly = false;
             this.style.backgroundColor = "white";
             
-            getSquare(coord_pos).readOnly = false;
-            getSquare(coord_pos).style.backgroundColor = "white";
+            getSquare(sym_pos).readOnly = false;
+            getSquare(sym_pos).style.backgroundColor = "white";
         } else {
             this.readOnly = true;
             this.style.backgroundColor = "black";
 
-            getSquare(coord_pos).readOnly = true;
-            getSquare(coord_pos).style.backgroundColor = "black";
+            getSquare(sym_pos).readOnly = true;
+            getSquare(sym_pos).style.backgroundColor = "black";
         }
-        coord_pos[0] = n - coord_pos[0];
-        coord_pos[1] = n - coord_pos[1];
     } else {
         this.focus();
         const y = parseInt(this.id.split(" ")[0]);
         const x = parseInt(this.id.split(" ")[1]);
         coord_pos = [x,y];
     }
-    reshade();
+//    reshade();
 }
 
 function one_box_focus (e) {
@@ -176,15 +173,7 @@ function one_box_focus (e) {
         }
         getSquare(coord_pos).focus();
     }
-    // Suggest words here:
-    
-    // First, we find the focused area:
-       // Need to reset the position we are located at:
-    const y = parseInt(this.id.split(" ")[0]);
-    const x = parseInt(this.id.split(" ")[1]);
-    coord_pos = [x,y];
-    
-
+    reshade();
 }
 
 
@@ -192,6 +181,74 @@ function one_box_focus (e) {
 // The function to call the DataMuse API to get a suggestion for the selected row/column:
 
 function get_suggestion() {
+    var word_boxes = find_word_boxes();
+    var word = "";
+    for (var box of word_boxes) {
+        if (box.value == " " || box.value =="") {
+            word = word.concat("?");
+            box.value = ""; // This is so that the placeholder will actually appear! (Otherwise, the space will fill the square instead.)
+        }
+        else {
+            word = word.concat(box.value);
+        }
+    }
+    // The following is a first attempt at using the data_muse api. It sorta works. I think I am doing the accessing without any encryption which feels sorta dangerous. I think I need to alter it to some extent... Maybe I should just get a key, and then I can use the https (if that's what will make it work)
+
+    
+
+    for (var box of all_boxes) {
+        box.placeholder = "";
+    }
+    var request = new XMLHttpRequest();
+    request.open('GET', "http://api.datamuse.com/words?sp=".concat(word));
+    suggested_word = "";
+    request.onload = function() {
+        var data = JSON.parse(this.response);
+        try {
+            suggested_word = data[0].word;
+        }
+        catch {
+            suggested_word = word;    
+        }
+        console.log("suggested word stored as: ".concat(suggested_word));
+        var k = 0;
+        for (var box of word_boxes) {
+            box.placeholder = suggested_word.substr(k, 1).toUpperCase();
+            k += 1;
+            console.log("box: ");
+            console.log(box);
+            console.log("box placeholder: ");
+            console.log(box.placeholder);
+        }
+        return suggested_word;
+    }
+
+    request.send();
+    
+    console.log(suggested_word);
+    
+    old_word = word;
+}
+
+function save_data() {
+    var all_data = [];
+    for (var box of all_boxes){
+        if (box.style.backgroundColor != "black") {
+            if (box.value == "" || box.value == " ") {
+                all_data.push(" ");
+            }
+            else {
+                all_data.push(box.value);
+            }
+        }
+        else {
+            all_data.push("b");
+        }
+    }
+    localStorage.setItem("entries", JSON.stringify(all_data));
+}
+
+function find_word_boxes() {
     var hit_wall = false;
     var check_pos = coord_pos;
     // Go backwards to the beginning of the word:
@@ -244,73 +301,8 @@ function get_suggestion() {
             }
         }
     }
-    var word = "";
-    for (var box of word_boxes) {
-        if (box.value == " " || box.value =="") {
-            word = word.concat("?");
-            box.value = ""; // This is so that the placeholder will actually appear! (Otherwise, the space will fill the square instead.)
-        }
-        else {
-            word = word.concat(box.value);
-        }
-    }
-    // The following is a first attempt at using the data_muse api. It sorta works. I think I am doing the accessing without any encryption which feels sorta dangerous. I think I need to alter it to some extent... Maybe I should just get a key, and then I can use the https (if that's what will make it work)
-
-    
-
-    for (var box of one_boxes) {
-        box.placeholder = "";
-    }
-    var request = new XMLHttpRequest();
-    request.open('GET', "http://api.datamuse.com/words?sp=".concat(word));
-    suggested_word = "";
-    request.onload = function() {
-        var data = JSON.parse(this.response);
-        try {
-            suggested_word = data[0].word;
-        }
-        catch {
-            suggested_word = word;    
-        }
-        console.log("suggested word stored as: ".concat(suggested_word));
-        var k = 0;
-        for (var box of word_boxes) {
-            box.placeholder = suggested_word.substr(k, 1).toUpperCase();
-            k += 1;
-            console.log("box: ");
-            console.log(box);
-            console.log("box placeholder: ");
-            console.log(box.placeholder);
-        }
-        return suggested_word;
-    }
-
-    request.send();
-    
-    console.log(suggested_word);
-    
-    old_word = word;
+    return word_boxes;
 }
-
-function save_data() {
-    var one_boxes = document.getElementsByClassName("one_box");
-    var all_data = [];
-    for (var box of one_boxes){
-        if (box.style.backgroundColor != "black") {
-            if (box.value == "" || box.value == " ") {
-                all_data.push(" ");
-            }
-            else {
-                all_data.push(box.value);
-            }
-        }
-        else {
-            all_data.push("b");
-        }
-    }
-    localStorage.setItem("entries", JSON.stringify(all_data));
-}
-
 // Movement in the four cardinal directions, skipping over the appropriate squares:
 function left_move() {
     if (coord_pos[0] > 0) {
@@ -365,24 +357,14 @@ function down_move() {
 }
 // Shade boxes based on orienation:
 function reshade() {
-    y = parseInt(document.activeElement.id.split(" ")[0]);
-    x = parseInt(document.activeElement.id.split(" ")[1]);
-    for (const one_box of one_boxes) {
+    var word_boxes = find_word_boxes();
+    for (const one_box of all_boxes) {
         if (one_box.style.backgroundColor != "black") {
-            if (orientation) {
-                if (parseInt(one_box.id.split(" ")[0]) == y) {
-                    one_box.style.backgroundColor = "#d0d0e1";
-                } else {
-                    one_box.style.backgroundColor = "white";
-                }
-            } else {
-                if (parseInt(one_box.id.split(" ")[1]) == x) {
-                    one_box.style.backgroundColor = "#d0d0e1";
-                } else {
-                    one_box.style.backgroundColor = "white";
-                }
-            }
+            one_box.style.backgroundColor = "white";
         }
+    }
+    for (const one_box of word_boxes) {
+        one_box.style.backgroundColor = "#d0d0e1";
     }
     if (document.activeElement.style.backgroundColor != "black") {
         document.activeElement.style.backgroundColor = "#ffe066";
