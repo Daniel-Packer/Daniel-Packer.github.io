@@ -41,7 +41,7 @@ for (var one_box of one_boxes) {
     if (old_entries[0] == "b") {
         one_box.style.backgroundColor = "black";
         one_box.readOnly = true;
-        old_entries.shift();
+        old_entries.shift();    
     }
     else {
         one_box.value = old_entries.shift();
@@ -265,7 +265,12 @@ function get_suggestion() {
     suggested_word = "";
     request.onload = function() {
         var data = JSON.parse(this.response);
-        suggested_word = data[0].word;
+        try {
+            suggested_word = data[0].word;
+        }
+        catch {
+            suggested_word = word;    
+        }
         console.log("suggested word stored as: ".concat(suggested_word));
         var k = 0;
         for (var box of word_boxes) {
