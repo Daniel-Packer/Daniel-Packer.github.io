@@ -1,4 +1,4 @@
-//Updated: 10-07-2020, 15:05
+//Updated: 19-07-2020, 12:10
 
 var n = 14; // We use this and count from zero, so the value here, is one less than the dimension.
 var orientation = true; // true means horizontal, false means vertical
@@ -248,12 +248,13 @@ function get_suggestion() {
     for (var box of word_boxes) {
         if (box.value == " " || box.value =="") {
             word = word.concat("?");
+            box.value = ""; // This is so that the placeholder will actually appear! (Otherwise, the space will fill the square instead.)
         }
         else {
             word = word.concat(box.value);
         }
     }
-    // The following is a first attempt at using the data_muse api. It doesn't work. I'm going to have to learn how to use js apis
+    // The following is a first attempt at using the data_muse api. It sorta works. I think I am doing the accessing without any encryption which feels sorta dangerous. I think I need to alter it to some extent... Maybe I should just get a key, and then I can use the https (if that's what will make it work)
 
     
 
