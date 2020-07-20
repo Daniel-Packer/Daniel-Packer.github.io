@@ -4,7 +4,7 @@ var n = 14; // We use this and count from zero, so the value here, is one less t
 var orientation = true; // true means horizontal, false means vertical
 var xword_string = "";
 var recent_move = 1;
-var old_word= " ";
+var old_word= [" ", 0];
 var suggested_word;
 var coord_pos = [0,0];
 for (var i = 0; i <= n; i += 1) {
@@ -34,6 +34,7 @@ if (old_entries == null) {
 var all_boxes = document.getElementsByClassName("one_box");
 for (var one_box of all_boxes) {
     one_box.addEventListener("keydown", one_box_keydown);
+    one_box.addEventListener("keyup", one_box_keyup);
     one_box.addEventListener("input", one_box_input);
     one_box.addEventListener("mousedown", one_box_click);
     one_box.addEventListener("focus", one_box_focus);
@@ -50,7 +51,7 @@ for (var one_box of all_boxes) {
 }
 
 function one_box_keydown(e){
-    this.placeholder = "";
+    const old_orientation = orientation;
     if (e.key.length == 1) { // Detects if the key pressed is a letter key
         this.value = '';
     }else if((e.which >= 37) && (e.which <= 40)){ // Detects if the key pressed is an arrow key
@@ -83,7 +84,18 @@ function one_box_keydown(e){
             }
         }
     }
-    else if (e.which == 8) { // Detects if Backspace was pressed:
+    else if (e.which == 13) { //Detects if Enter was pressed:
+         get_suggestion();
+    }
+    getSquare(coord_pos).focus();
+    reshade();
+    if (old_orientation != orientation) {
+        clear_placeholders();
+    }
+}
+
+function one_box_keyup(e) {
+    if (e.which == 8) { // Detects if Backspace was pressed:
         this.value = '';
         if (orientation) {
             left_move();
@@ -102,13 +114,9 @@ function one_box_keydown(e){
             down_move();
         }
     }
-    else if (e.which == 13) { //Detects if Enter was pressed:
-         get_suggestion();
-    }
     getSquare(coord_pos).focus();
     reshade();
 }
-
 function one_box_input(e){
     this.value = this.value.toUpperCase().slice(-1);
     if (this.value.length == 1) {
@@ -192,20 +200,23 @@ function get_suggestion() {
             word = word.concat(box.value);
         }
     }
+    if (word == old_word[0]) {
+        old_word[1] = old_word[1] + 1;
+    }
+    else {
+        old_word = [word, 0];
+    }
     // The following is a first attempt at using the data_muse api. It sorta works. I think I am doing the accessing without any encryption which feels sorta dangerous. I think I need to alter it to some extent... Maybe I should just get a key, and then I can use the https (if that's what will make it work)
 
     
-
-    for (var box of all_boxes) {
-        box.placeholder = "";
-    }
+    clear_placeholders();
     var request = new XMLHttpRequest();
     request.open('GET', "http://api.datamuse.com/words?sp=".concat(word));
     suggested_word = "";
     request.onload = function() {
         var data = JSON.parse(this.response);
         try {
-            suggested_word = data[0].word;
+            suggested_word = data[old_word[1]].word;
         }
         catch {
             suggested_word = word;    
@@ -226,8 +237,6 @@ function get_suggestion() {
     request.send();
     
     console.log(suggested_word);
-    
-    old_word = word;
 }
 
 function save_data() {
@@ -302,6 +311,11 @@ function find_word_boxes() {
         }
     }
     return word_boxes;
+}
+function clear_placeholders(){
+    for (box of all_boxes) {
+        box.placeholder = "";
+    }
 }
 // Movement in the four cardinal directions, skipping over the appropriate squares:
 function left_move() {
