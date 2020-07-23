@@ -9,15 +9,23 @@
     <div class="header">
         <h1>Disjoint Words</h1>
     </div>
-    <div class="toolbar">
+    <div class="navbar">
         <a href="../index.html">Home</a>
+        
     </div>
-    
     <div class="content_wrapper">
-        <div id="x-word" class="wxord">
+    <div class="toolbar">
+        <div class="dropdown">
+            <button onclick="open_dropdown()" class="dropbtn">Open</button>
+            <div id="drop_opts" class="drop_content">
+                <span class="button-like" onclick="restore_save_file(&quot;blank_data&quot;)">New Crossword</span> 
+                <span class="button-like">temp</span>
+            </div>
         </div>
-        <div>
         <button onclick="save_data()" title="Saves data in browser cache.">Save</button>
+    </div>
+        <br/>
+        <div id="x-word" class="wxord">
         </div>
     </div>
     <div class="instructions-wrapper">

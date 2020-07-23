@@ -15,22 +15,6 @@ for (var i = 0; i <= n; i += 1) {
 }
 document.getElementById("x-word").innerHTML = xword_string;
 
-var old_entries = [];
-try {
-    old_entries = JSON.parse(localStorage.getItem("entries"));
-}
-catch {
-    old_entries = [];
-    for (var i = 0; i < (n + 1)*(n+1) ; i++) {
-        old_entries.push("");
-    }
-}
-if (old_entries == null) {
-    old_entries = [];
-    for (var i = 0; i < (n + 1)*(n+1) ; i++) {
-        old_entries.push("");
-    }
-}
 var all_boxes = document.getElementsByClassName("one_box");
 for (var one_box of all_boxes) {
     one_box.addEventListener("keydown", one_box_keydown);
@@ -39,15 +23,22 @@ for (var one_box of all_boxes) {
     one_box.addEventListener("mousedown", one_box_click);
     one_box.addEventListener("focus", one_box_focus);
     one_box.style.border = "1px solid black";
-    if (old_entries[0] == "b") {
-        one_box.style.backgroundColor = "black";
-        one_box.readOnly = true;
-        old_entries.shift();    
-    }
-    else {
-        one_box.value = old_entries.shift();
-    }
+}
 
+restore_save_file("entries");    
+blank_data();
+
+
+window.onclick = function(e) {
+    if (!e.target.matches('.dropbtn')) {
+        var dropdowns = document.getElementsByClassName("drop_content");
+        for (var i = 0; i < dropdowns.length; i += 1) {
+            var open_drop_down = dropdowns[i];
+            if (open_drop_down.classList.contains("show")) {
+                open_drop_down.classList.remove("show");
+            }
+        }
+    }
 }
 
 function one_box_keydown(e){
@@ -183,6 +174,34 @@ function one_box_focus (e) {
     }
     reshade();
 }
+function restore_save_file (file_name) {
+    var old_entries = [];
+    try {
+        old_entries = JSON.parse(localStorage.getItem(file_name));
+    }
+    catch {
+        old_entries = [];
+        for (var i = 0; i < (n + 1)*(n+1) ; i++) {
+            old_entries.push("");
+        }
+    }
+    if (old_entries == null) {
+        old_entries = [];
+        for (var i = 0; i < (n + 1)*(n+1) ; i++) {
+            old_entries.push("");
+        }
+    }
+    for (const box of all_boxes) {
+        if (old_entries[0] == "b") {
+            box.style.backgroundColor = "black";
+            box.readOnly = true;
+            old_entries.shift();    
+        }
+        else {
+            box.value = old_entries.shift();
+        }
+    }
+}
 
 
 // Helper Functions
@@ -216,7 +235,7 @@ function get_suggestion() {
     request.onload = function() {
         var data = JSON.parse(this.response);
         try {
-            suggested_word = data[old_word[1]].word;
+            suggested_word = data[old_word[1]].word.replace(/ /g, ""); // Remove white space after picking word
         }
         catch {
             suggested_word = word;    
@@ -255,6 +274,14 @@ function save_data() {
         }
     }
     localStorage.setItem("entries", JSON.stringify(all_data));
+}
+
+function blank_data() {
+    var all_data = [];
+    for (var i = 0; i < (n+1)*(n+1); i += 1) {
+        all_data.push(" ");
+    }
+    localStorage.setItem("blank_data", JSON.stringify(all_data));
 }
 
 function find_word_boxes() {
@@ -372,15 +399,15 @@ function down_move() {
 // Shade boxes based on orienation:
 function reshade() {
     var word_boxes = find_word_boxes();
-    for (const one_box of all_boxes) {
+    for (const one_box of all_boxes) { // Remove previous shading of selected boxes
         if (one_box.style.backgroundColor != "black") {
             one_box.style.backgroundColor = "white";
         }
     }
-    for (const one_box of word_boxes) {
-        one_box.style.backgroundColor = "#d0d0e1";
-    }
     if (document.activeElement.style.backgroundColor != "black") {
+        for (const one_box of word_boxes) { // Set selected boxes to be shaded
+            one_box.style.backgroundColor = "#d0d0e1";
+        }
         document.activeElement.style.backgroundColor = "#ffe066";
     }
 }
@@ -424,4 +451,8 @@ function setCaretPosition(elemId, caretPos) {
             }
         }
     }
+}
+// Formatting stuff:
+function open_dropdown() {
+    document.getElementById("drop_opts").classList.toggle("show");
 }

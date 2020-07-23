@@ -24,6 +24,13 @@ body {
     font: 15px/25px Verdana, sans-serif;
     color: #979893;
     font-weight: lighter;
+    display: inline;
+}
+.navbar {
+    text-align: center;
+    font: 15px/25px Verdana, sans-serif;
+    color: #979893;
+    font-weight: lighter;
 }
 input {
     border: none;
@@ -35,7 +42,6 @@ input {
         outline: none;
     }
 }
-
 .instructions {
     text-align: center;
     font: 10px/15px Verdana, sans-serif;
@@ -46,14 +52,13 @@ input {
 .instructions-wrapper {
     text-align: center;
 }
-
 button {
-    background-color:white;
+    background-color: gainsboro;
     font: 10px/15px Verdana, sans-serif;
     border-color: black;
     border-style: solid;
-    border-width: 2px;
-    padding: 2px 4px;
+    border-width: 0px;
+    padding: 4px 6px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
@@ -62,5 +67,32 @@ button {
     margin: 0px;
 }
 button:hover {
-    background-color:floralwhite;
+    background-color:darkgray;
+}
+.button-like {
+    background-color:gainsboro;
+    font: 12px/15px Verdana, sans-serif;
+    color: black;
+    transition-duration: 0.3s; 
+    padding: 5px 8px;
+    display: block;
+    user-select: none;
+}
+.button-like:hover {
+    background-color: darkgray;
+}
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+.drop_content {
+    display: none;
+    position: absolute;
+    background-color: floralwhite;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    min-width: 140px;
+}
+.show {
+    display: block;
 }
