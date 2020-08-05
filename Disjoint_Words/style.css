@@ -1,8 +1,4 @@
-.one_box {
-    width : 20px;
-    height : 20px;
-    text-align: center;
-}
+
 .xword {
     display: inline-block;
 }
@@ -32,15 +28,21 @@ body {
     color: #979893;
     font-weight: lighter;
 }
+.num_input {
+    width : 20px;
+    border : 2px solid #666666;
+    border-radius: 2px;
+}
 input {
     border: none;
-    color: transparent;
-    text-shadow: 0 0 0 black;
     text-align: center;
-
-    &:focus {
-        outline: none;
-    }
+    width : 100px;
+    caret-color: black;
+}
+.one_box {
+    caret-color: transparent;
+    width : 20px;
+    height : 20px;
 }
 .instructions {
     text-align: center;
@@ -69,18 +71,21 @@ button {
 button:hover {
     background-color:darkgray;
 }
-.button-like {
+
+.button_like {
     background-color:gainsboro;
     font: 12px/15px Verdana, sans-serif;
     color: black;
     transition-duration: 0.3s; 
     padding: 5px 8px;
     display: block;
+    text-align: left;
     user-select: none;
 }
-.button-like:hover {
+.button_like:hover {
     background-color: darkgray;
 }
+
 .dropdown {
     position: relative;
     display: inline-block;

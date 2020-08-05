@@ -16,13 +16,21 @@
     <div class="content_wrapper">
     <div class="toolbar">
         <div class="dropdown">
-            <button onclick="open_dropdown()" class="dropbtn">Open</button>
+            <button class="dropbtn">Open</button>
             <div id="drop_opts" class="drop_content">
-                <span class="button-like" onclick="restore_save_file(&quot;blank_data&quot;)">New Crossword</span> 
-                <span class="button-like">temp</span>
+                <span class="button_like" onclick="restore_save_file(&quot;blank_data&quot;)">New Crossword</span> 
+                <span class="button_like">temp</span>
             </div>
         </div>
-        <button onclick="save_data()" title="Saves data in browser cache.">Save</button>
+        <div class="dropdown">
+        <button class="dropbtn">Options</button>
+            <div class="drop_content">
+<!--                <div><span class="button_like">Set Dimension: </span> <input id="n"> </div>-->
+                <div class="button_like">Set Dimension: <input class="num_input" id="n_input"></div>
+            </div>
+        </div>
+        <button onclick="save()" title="Saves data in browser cache.">Save</button>
+        <input type=text placeholder="My Crossword" id="save_name_input">
     </div>
         <br/>
         <div id="x-word" class="wxord">

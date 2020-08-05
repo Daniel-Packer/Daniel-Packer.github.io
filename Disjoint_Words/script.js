@@ -1,19 +1,29 @@
 //Updated: 19-07-2020, 12:10
 
-var n = 14; // We use this and count from zero, so the value here, is one less than the dimension.
+var n = localStorage.getItem("n") || 14; // We use this and count from zero, so the value here, is one less than the dimension.
 var orientation = true; // true means horizontal, false means vertical
 var xword_string = "";
 var recent_move = 1;
 var old_word= [" ", 0];
 var suggested_word;
 var coord_pos = [0,0];
+
+const x_word = document.getElementById("x-word");
+
 for (var i = 0; i <= n; i += 1) {
     for (var j = 0; j <= n; j += 1){
-        xword_string = xword_string.concat('<input id=\"'.concat(i.toString()).concat(" ").concat(j.toString()).concat('\" class=\"one_box\">'));
+        const proto_box = document.createElement("INPUT");
+        proto_box.setAttribute("id", i.toString().concat(" ").concat(j.toString()));
+        proto_box.setAttribute("class", "one_box");
+        x_word.appendChild(proto_box);
     }
-    xword_string = xword_string.concat('<br>');
+    x_word.appendChild(document.createElement("BR"));
 }
-document.getElementById("x-word").innerHTML = xword_string;
+
+const drop_down_buttons = document.getElementsByClassName("dropbtn");
+for (const btn of drop_down_buttons) {
+    btn.addEventListener("click", open_dropdown);
+}
 
 var all_boxes = document.getElementsByClassName("one_box");
 for (var one_box of all_boxes) {
@@ -27,16 +37,22 @@ for (var one_box of all_boxes) {
 
 restore_save_file("entries");    
 blank_data();
+const n_input = document.getElementById("n_input");
+n_input.addEventListener("keydown", function(e) {
+    if (e.keyCode == 13) {
+        const n_new = parseInt(n_input.value)-1;
+        localStorage.setItem("n", n_new);
+        location.reload();
+    }
+})
 
-
-window.onclick = function(e) {
-    if (!e.target.matches('.dropbtn')) {
-        var dropdowns = document.getElementsByClassName("drop_content");
-        for (var i = 0; i < dropdowns.length; i += 1) {
-            var open_drop_down = dropdowns[i];
-            if (open_drop_down.classList.contains("show")) {
-                open_drop_down.classList.remove("show");
-            }
+window.onmouseup = function(e) {
+    console.log(e.target.type);
+    // I am using a mouse_up here in a kinda hacky way, so that the click triggers of the dropdown menu will have a chance to trigger before this event.
+    const shown_drop_down = document.getElementsByClassName("show");
+    if (!(e.target.type == "text")) {
+        for (var i = 0; i < shown_drop_down.length; i += 1) {
+            shown_drop_down[i].classList.toggle("show");
         }
     }
 }
@@ -177,7 +193,22 @@ function one_box_focus (e) {
 function restore_save_file (file_name) {
     var old_entries = [];
     try {
-        old_entries = JSON.parse(localStorage.getItem(file_name));
+        const restore = JSON.parse(localStorage.getItem(file_name));
+        if (restore[0] == n) {
+            old_entries = restore[1];
+            for (const box of all_boxes) {
+                if (old_entries[0] == "b") {
+                    box.style.backgroundColor = "black";
+                    box.readOnly = true;
+                    old_entries.shift();    
+                }
+                else {
+                    box.value = old_entries.shift();
+                    box.style.backgroundColor = "white";
+                    box.readOnly = false;
+                }
+            }
+        }
     }
     catch {
         old_entries = [];
@@ -185,24 +216,12 @@ function restore_save_file (file_name) {
             old_entries.push("");
         }
     }
-    if (old_entries == null) {
-        old_entries = [];
-        for (var i = 0; i < (n + 1)*(n+1) ; i++) {
-            old_entries.push("");
-        }
-    }
-    for (const box of all_boxes) {
-        if (old_entries[0] == "b") {
-            box.style.backgroundColor = "black";
-            box.readOnly = true;
-            old_entries.shift();    
-        }
-        else {
-            box.value = old_entries.shift();
-        }
-    }
 }
 
+function save() {
+    const save_name = document.getElementById("save_name_input").value;
+    save_data(save_name);
+}
 
 // Helper Functions
 // The function to call the DataMuse API to get a suggestion for the selected row/column:
@@ -240,25 +259,19 @@ function get_suggestion() {
         catch {
             suggested_word = word;    
         }
-        console.log("suggested word stored as: ".concat(suggested_word));
         var k = 0;
         for (var box of word_boxes) {
             box.placeholder = suggested_word.substr(k, 1).toUpperCase();
             k += 1;
-            console.log("box: ");
-            console.log(box);
-            console.log("box placeholder: ");
-            console.log(box.placeholder);
         }
         return suggested_word;
     }
 
     request.send();
     
-    console.log(suggested_word);
 }
 
-function save_data() {
+function save_data(save_name) {
     var all_data = [];
     for (var box of all_boxes){
         if (box.style.backgroundColor != "black") {
@@ -273,7 +286,16 @@ function save_data() {
             all_data.push("b");
         }
     }
-    localStorage.setItem("entries", JSON.stringify(all_data));
+    // We locally maintain a list of the names of the saved xwords, so that we can give the user options of which to pick
+    var save_names = JSON.parse(localStorage.getItem("save_names")) || [];
+    const x_word_data_to_save = [n, all_data];
+    localStorage.setItem(save_name, JSON.stringify(x_word_data_to_save)); // Save the particular xword
+    
+    // Add the new crossword name (if it is new) and save the new list (at some point I will have to come up with a way to clear entries...)
+    if (!save_names.includes(save_name)) {
+        save_names.push(save_name);
+    }
+    localStorage.setItem("save_names", JSON.stringify(save_names));
 }
 
 function blank_data() {
@@ -281,7 +303,7 @@ function blank_data() {
     for (var i = 0; i < (n+1)*(n+1); i += 1) {
         all_data.push(" ");
     }
-    localStorage.setItem("blank_data", JSON.stringify(all_data));
+    localStorage.setItem("blank_data", JSON.stringify([n,all_data]));
 }
 
 function find_word_boxes() {
@@ -454,5 +476,38 @@ function setCaretPosition(elemId, caretPos) {
 }
 // Formatting stuff:
 function open_dropdown() {
-    document.getElementById("drop_opts").classList.toggle("show");
+    refresh_save_dropdown();
+    this.parentElement.getElementsByClassName("drop_content")[0].classList.toggle("show");
+    // drop_content
+}
+function close_dropdown() {
+    this.parentElement.getElementsByClassName("drop_content")[0].classList.toggle("show");
+}
+function refresh_save_dropdown() {
+    const save_names = JSON.parse(localStorage.getItem("save_names")) || [];
+    
+    // drop_opts is the drop down menu that stores the various saved files.
+    const drop_opts = document.getElementById("drop_opts");
+    drop_opts.textContent ='';
+    
+    const blank_opt = document.createElement("SPAN");
+    blank_opt.setAttribute("class", "button_like");
+    blank_opt.addEventListener("click", function(){restore_save_file("blank_data")});
+    blank_opt.appendChild(document.createTextNode("Blank Crossword"));
+    drop_opts.appendChild(blank_opt);
+    
+    for (const save_name of save_names) {
+        const opt = document.createElement("SPAN");
+        opt.setAttribute("class", "button_like");
+        opt.addEventListener("click", function(){restore_save_file(save_name)});
+        opt.appendChild(document.createTextNode(save_name));
+        const n_save = (parseInt(JSON.parse(localStorage.getItem(save_name))[0]) + 1).toString();
+        const n_span = document.createElement("SPAN");
+        n_span.style.float = "right";
+        n_span.style.color = "#666666"
+        n_span.appendChild(document.createTextNode(n_save));
+        opt.appendChild(n_span);
+        drop_opts.appendChild(opt);
+    }
+    drop_opts.addEventListener("mouseup", close_dropdown);
 }
