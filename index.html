@@ -1,25 +1,202 @@
 <html>
+  <head>
+    <title>Daniel Packer's Webpage</title>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="index_style.css" />
+    <link rel="stylesheet" href="nav_styles.css" />
+    <link rel="stylesheet" href="default_styles.css" />
+  </head>
 
-<head>
-    <title>Daniel Packer's Webpage</title>   
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="index_style.css">
-</head>
-
-<body>
-    <div class='header'>
-        <h2>Daniel Packer's Website</h2>
-        <div class = "toolbar">
-            <a href="/index.html">Home</a>
-            <a href = "Scythe_Selection/scylector.html">The Scylector</a>
-            <a href="Conway_GoL/game_of_life.html">The Game of Life on a Torus</a>
-            <a href="Disjoint_Words/index.html">Disjoint Words</a>
-        </div>
+  <body>
+    <div class="header">
+      <h2>Daniel Packer's Website</h2>
+      <div class="toolbar"></div>
+      <nav>
+        <a href="index.html">
+          <button class="nav-button" href="index.html">Home</button></a
+        >
+        <a href="/courses/index.html">
+          <button class="nav-button">Courses</button></a
+        >
+        <a href="Daniel_Packer_Resume.pdf"
+          ><button class="nav-button">My Resume</button></a
+        >
+        <a href="Daniel_Packer_CV.pdf">
+          <button class="nav-button">My CV</button>
+        </a>
+      </nav>
     </div>
-    
-    
-    
-    
-</body>
-    
+    <div class="content">
+      <div class="column longtext">
+        I have a Ph.D. in Mathematics from the Ohio State University where I
+        studied symmetry aware machine learning (whatever that may mean to you).
+        <br />
+        On this website, you can find various small projects of mine, courses I
+        am teaching, as well as my resume and/or CV.
+        <br />
+        <h2>Research</h2>
+        <h3>Publications/Preprints</h3>
+        <ul>
+          <li>
+            <a
+              href="https://www.researchgate.net/publication/334806563_A_Paper_on_Pencils_A_Pencil_and_Paper_Puzzle_Pencils_is_NP-Complete"
+              >Pencils is NP-Complete</a
+            >
+            with Sophia White and Aaron Williams
+          </li>
+          <li>
+            <a href="https://arxiv.org/abs/2205.14039"
+              >Group Invariant Max Filtering</a
+            >
+            with Jameson Cahill, Joey Iverson, and Dustin Mixon
+          </li>
+          <li>
+            <a href="https://arxiv.org/abs/2212.05104"
+              >Max Filtering with Reflection Groups</a
+            >
+            with Dustin Mixon
+          </li>
+          <li>
+            <a href="https://arxiv.org/abs/2306.10586"
+              >The Gromov-Wasserstein distance between spheres
+            </a>
+            with Shreya Arya, Arnab Auddy, Ranthony Edmonds, Sunhyuk Lim, and
+            Facundo Memoli
+          </li>
+        </ul>
+        <h3>Open Source Contributions</h3>
+        <ul>
+          <li>
+            <a href="https://ott-jax.readthedocs.io/en/latest/"
+              >Optimal Transport Tools</a
+            >
+            -- I contributed a speed-up to the computation of the
+            Gromov-Wasserstein distance.
+          </li>
+          <li>
+            <a href="https://github.com/leanprover-community/mathlib"
+              >Mathlib (3)</a
+            >
+            -- I added theorems and refactored parts of the library focusing on
+            finite-dimensional Hilbert spaces.
+          </li>
+        </ul>
+        <h2>Work Experience</h2>
+        <ul>
+          <li>
+            (Senior) Machine Learning Model Risk Specialist at Upstart (May 2024
+            - Present)
+          </li>
+          <li>Data science intern at Nationwide (January 2023 - May 2024)</li>
+          <li>Data science intern at MinedXAI (May 2022 - August 2022)</li>
+        </ul>
+        <h2>Teaching</h2>
+        <table text-align="left">
+          <tbody>
+            <tr>
+              <th>Semester</th>
+              <th>Role</th>
+              <th>Course Number</th>
+              <th>Course Name</th>
+            </tr>
+            <tr>
+              <td>Autumn 2020</td>
+              <td>TA</td>
+              <td>MATH 1156</td>
+              <td>Calculus for Biology</td>
+            </tr>
+            <tr>
+              <td>Spring 2021</td>
+              <td>TA</td>
+              <td>MATH 1152</td>
+              <td>Calculus II</td>
+            </tr>
+            <tr>
+              <td>Summer 2021</td>
+              <td>TA</td>
+              <td>MATH 1148</td>
+              <td>College Algebra</td>
+            </tr>
+            <tr>
+              <td>Autumn 2021</td>
+              <td>TA</td>
+              <td>MATH 1131</td>
+              <td>Calculus for Business</td>
+            </tr>
+            <tr>
+              <td>Autumn 2022</td>
+              <td>TA</td>
+              <td>MATH 1125</td>
+              <td>Math for Elementary School Teachers</td>
+            </tr>
+          </tbody>
+        </table>
+        <h2>Projects/External Links</h2>
+        <table text-align="left">
+          <tbody>
+            <tr>
+              <th>Link</th>
+              <th>Description</th>
+            </tr>
+            <tr>
+              <td>
+                <a href="https://howaretheodds.com">How are the odds?</a>
+              </td>
+              <td>
+                My main project website. Here you can find implementations of a
+                few more complicated projects of mine.
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a href="https://github.com/Daniel-Packer">GitHub</a>
+              </td>
+              <td>My main GitHub account</td>
+            </tr>
+            <tr>
+              <td>
+                <a href="Conway_GoL/game_of_life.html"
+                  >The Game of Life on a Torus</a
+                >
+              </td>
+              <td>A tribute implementation of John Conway's Game of Life</td>
+            </tr>
+            <tr>
+              <td>
+                <a href="Scythe_Selection/scylector.html">The Scylector</a>
+              </td>
+              <td>
+                A tool for fair selections of factions in the game
+                <a href="https://en.wikipedia.org/wiki/Scythe_(board_game)"
+                  >Scythe</a
+                >
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <a href="Disjoint_Words/index.html">Disjoint Words</a>
+              </td>
+              <td>A lightweight crossword builder</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="column">
+        <div class="photowrapper">
+          <img
+            class="photo"
+            src="images/Photo_October23.jpg"
+            alt="Photo of Daniel Packer"
+            max-width="40%"
+          />
+          <br />
+          Photo Credit:
+          <a href="https://genevievewhittell.wixsite.com/photo"
+            >Genevieve Whittell</a
+          >
+        </div>
+      </div>
+      <br style="clear: both" />
+    </div>
+  </body>
 </html>
